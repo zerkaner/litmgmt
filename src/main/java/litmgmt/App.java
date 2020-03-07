@@ -1,33 +1,37 @@
 package litmgmt;
 
-import io.javalin.Javalin;
-import io.javalin.plugin.rendering.vue.VueComponent;
+import java.nio.file.Paths;
 
-/** REST-Endpunkt mit Javalin und Vue.js. */
-public class App 
-{
-    public static void main( final String[] args)
-    {
-        System.out.println( "Hello World 2!" );
-        Javalin app = Javalin.create(
-            config -> {
-                config.enableWebjars();
-                config.enableCorsForAllOrigins();
-                config.defaultContentType = "application/json";
-            }
-        ).start(7000);
-        //app.get("/", ctx -> ctx.result("Hello World 2"));
-        app.get("/", new VueComponent("<hello-world></hello-world>"));
-        app.get("/users", new VueComponent("<user-overview></user-overview>"));
-        app.get("/users/:user-id", new VueComponent("<user-profile></user-profile>"));
+import litmgmt.citation.CollectionManager;
+import litmgmt.persistency.SaveFileReader;
+import litmgmt.rest.JavalinServer;
+import litmgmt.users.UserAuthenticator;
 
 
-        UserController userController = new UserController();
-        app.get("/api/users", userController.getAll);
-        app.get("/api/users/:user-id", ctx -> userController.getOne(ctx));
-        
-    }
+/** REST-style Javalin server for the literature management web app. */
+public class App {
+
+  public static void main(final String[] args) {
+
+    var userAuth = new UserAuthenticator();
+    var colMgr = new CollectionManager(userAuth);
+    var server = new JavalinServer(userAuth, colMgr, 7000);
+
+    // Restore the previous program state and add hook for save on ordered shutdown.
+    var saveFile = Paths.get(System.getProperty("user.dir"), "savefile.json").toString();
+    var persistency = new SaveFileReader(saveFile, userAuth, colMgr);
+    persistency.readFromFile();
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      public void run()  {
+        server.stop();
+        persistency.saveToFile();
+      }
+    });
+
+    // Start the server!
+    server.start();
+  }
 }
 
-
 // https://www.baeldung.com/javalin-rest-microservices
+// curl -H "Accept: application/json" -H "Authorization: Bearer my_token" https://reqbin.com/echo/get/json

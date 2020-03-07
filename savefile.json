@@ -1,0 +1,24 @@
+{
+  "writtenOn": "2020-03-07 21:59:25",
+  "idCounters": [2, 0, 0],
+  "users": [
+    {
+      "id": 0,
+      "name": "john",
+      "email": "john.wayne@web.de",
+      "pwhash": "B9526479D8E75EEC48092197447318D86D2194EC",
+      "collections": []
+    },
+    {
+      "id": 1,
+      "name": "rob",
+      "email": "rob.halford@metal-4-u.uk",
+      "pwhash": "49108EFFDDE38D14C362C77C75217CE614DFF5BE",
+      "collections": []
+    }
+  ],
+  "collections": [
+  ],
+  "entries": [
+  ]
+}
