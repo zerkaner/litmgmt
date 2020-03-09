@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import litmgmt.citation.CollectionManager;
+import litmgmt.citation.description.DescriptionList;
 import litmgmt.users.UserAuthenticator;
 import litmgmt.users.UserEmailFormatException;
 import litmgmt.users.UserNameAlreadyInUseException;
@@ -102,6 +103,10 @@ public class JavalinServer {
       }
     });
 
+    // curl http://localhost:7000/api/entrydescriptions
+    _server.get("/api/entrydescriptions", ctx -> {
+      ctx.json(DescriptionList.getEntryDescriptions());
+    });
 
     // _server.get("/api/collections", ctx -> ctx.result("[]"));
     // _server.post("/api/collections", ctx -> ctx.result("[]"));
