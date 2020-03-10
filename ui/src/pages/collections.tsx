@@ -1,6 +1,7 @@
 import React from 'react';
 import Menue from '../components/header/header';
 import Footer from '../components/footer/footer';
+import CollectionList from '../components/collections/collectionList';
 
 function CollectionsPage() {
     return (
@@ -8,7 +9,7 @@ function CollectionsPage() {
            <Menue title="Litmgmt - Bibtex Manager" />
             <div className="columns body-columns">
                 <div className="column is-half is-offset-one-quarter">
-                    Collections
+                    <CollectionList />
                 </div>
             </div>
             <Footer />
