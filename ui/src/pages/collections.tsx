@@ -1,10 +1,14 @@
 import React from 'react';
+import Menue from '../components/header/header'
 
 function CollectionsPage() {
     return (
-        <div>
-            Collections
-        </div>
+        <>
+            <Menue />
+            <div>
+                Collections
+            </div>
+        </>
     );
 }
 

@@ -1,10 +1,14 @@
 import React from 'react';
+import Menue from '../components/header/header'
 
 function EntriesPage() {
     return (
-        <div>
-            Entries
-        </div>
+        <>
+            <Menue />
+            <div>
+                Entries
+            </div>
+        </>
     );
 }
 
