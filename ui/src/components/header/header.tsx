@@ -1,16 +1,16 @@
 import React from 'react';
 
 type Props {
-
+    title: String
 }
 
 function Menue(props: Props) {
-    
+
     return (
         <div className="navbar is-inline-flex is-transparent">
             <div className="navbar-brand">
                 <a className="navbar-item">
-                    Bibtex Management
+                    {props.title}
             </a>
             </div>
             <div className="navbar-menu">
