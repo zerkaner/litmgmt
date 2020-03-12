@@ -1,13 +1,13 @@
 {
-  "writtenOn": "2020-03-09 16:57:49",
-  "idCounters": [2, 0, 0],
+  "writtenOn": "2020-03-11 15:59:43",
+  "idCounters": [2, 7, 7],
   "users": [
     {
       "id": 0,
       "name": "john",
       "email": "john.wayne@web.de",
       "pwhash": "B9526479D8E75EEC48092197447318D86D2194EC",
-      "collections": []
+      "collections": [6]
     },
     {
       "id": 1,
@@ -18,7 +18,11 @@
     }
   ],
   "collections": [
-  ],
-  "entries": [
+    {
+      "id": 6,
+      "name": "col02 newName",
+      "entries": [
+      ]
+    }
   ]
 }

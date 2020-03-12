@@ -8,9 +8,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import litmgmt.citation.Collection;
-import litmgmt.citation.CollectionManager;
-import litmgmt.citation.Entry;
+import litmgmt.citation.collections.Collection;
+import litmgmt.citation.collections.CollectionManager;
 import litmgmt.users.User;
 import litmgmt.users.UserAuthenticator;
 
@@ -57,14 +56,6 @@ public class SaveFileReader {
         if (collection != null) collections.add(collection);
       }
       _colMgr.setCollectionList(collections);
-
-      // Restore entries.
-      var entries = new ArrayList<Entry>();
-      for (var entryStr : jsonObj.get("entries")) {
-        var entry = Entry.loadEntryFromJson(entryStr);
-        if (entry != null) entries.add(entry);
-      }
-      _colMgr.setEntryList(entries);
     }
     catch (Exception ex) {
       System.err.println("[SaveFileReader] Failed to read file '"+_filePath+"'!");
@@ -78,9 +69,11 @@ public class SaveFileReader {
     sb.append("{\n");
     var idStr = IdHelper.GetNextUserId()+", "+IdHelper.GetNextCollectionId()+", "+IdHelper.GetNextEntryId();
     var date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    sb.append("  \"writtenOn\": \""+date+"\",\n");
-    sb.append("  \"idCounters\": ["+idStr+"],\n");
-    sb.append("  \"users\": [\n");
+    sb.append(
+      "  \"writtenOn\": \""+date+"\",\n"+
+      "  \"idCounters\": ["+idStr+"],\n"+
+      "  \"users\": [\n"
+    );
     var users = _userAuth.getUserList();
     for (int i = 0; i < users.size(); i++) {
       sb.append(users.get(i).saveUserAsJson());
@@ -93,14 +86,6 @@ public class SaveFileReader {
     for (int i = 0; i < collections.size(); i++) {
       sb.append(collections.get(i).saveCollectionAsJson());
       if (i < collections.size() - 1) sb.append(",");
-      sb.append("\n");
-    }
-    sb.append("  ],\n");
-    sb.append("  \"entries\": [\n");
-    var entries = _colMgr.getEntryList();
-    for (int i = 0; i < entries.size(); i++) {
-      sb.append(entries.get(i).saveEntryAsJson());
-      if (i < entries.size() - 1) sb.append(",");
       sb.append("\n");
     }
     sb.append("  ]\n");
