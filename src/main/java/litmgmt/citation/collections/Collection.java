@@ -2,12 +2,14 @@ package litmgmt.citation.collections;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 import litmgmt.citation.description.EntryType;
 import litmgmt.persistency.IdHelper;
 
 
 /** A collection is an aggregation of citation entries. */
+@JsonPropertyOrder({"id", "name", "entries"})
 public class Collection {
 
   private int _id;              // Collection identifier.
@@ -43,6 +45,26 @@ public class Collection {
     var newEntry = new Entry(citeKey, entryType);
     _entries.add(newEntry);
     return newEntry;
+  }
+
+
+  /** Delete an entry of this collection.
+   * @param entry The entry to remove. */
+  public void deleteEntry(Entry entry) {
+    _entries.remove(entry);
+  }
+
+
+  /** Rename an entry of this collection.
+   * @param entry The entry to rename.
+   * @param newCiteKey The new cite key for the entry.
+   * @return Success flag, tells whether renaming succeeded or not (because of a name collision). */
+  public boolean renameEntry(Entry entry, String newCiteKey) {
+    for (var existingEntry : _entries) {
+      if (existingEntry.getCiteKey().equals(newCiteKey)) return false;
+    }
+    entry.rename(newCiteKey);
+    return true;
   }
 
 
@@ -86,7 +108,7 @@ public class Collection {
       "      \"entries\": [\n"
     );
     for (int i = 0; i < _entries.size(); i++) {
-      sb.append(_entries.get(i));
+      sb.append(_entries.get(i).saveEntryAsJson());
       if (i < _entries.size() - 1) sb.append(",\n");
       else sb.append("\n");
     }

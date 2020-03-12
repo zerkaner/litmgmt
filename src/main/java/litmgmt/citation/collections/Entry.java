@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import litmgmt.citation.description.EntryType;
 import litmgmt.citation.description.FieldType;
 import litmgmt.persistency.IdHelper;
 
 
 /** A citation entry. It has a cite key, a type and a number of data fields. */
+@JsonPropertyOrder({"id", "citeKey", "entryType", "fields"})
 public class Entry {
 
   private int _id;                         // Identifier of this entry.
@@ -47,6 +51,13 @@ public class Entry {
   public void setField(FieldType fieldType, String value) {
     if (!_keyOrder.contains(fieldType)) _keyOrder.add(fieldType);
     _fields.put(fieldType, value);
+  }
+
+
+  /** Rename this entry.
+   * @param newCiteKey The new cite key for this entry. */
+  public void rename(String newCiteKey) {
+    _citeKey = newCiteKey;
   }
 
 
@@ -89,10 +100,7 @@ public class Entry {
     for (int i = 0; i < _keyOrder.size(); i++) {
       var ft = _keyOrder.get(i);
       sb.append(
-        "          {\n"+
-        "            \"fieldType\": \""+ft.toString().toLowerCase()+"\",\n"+
-        "            \"value\": \""+_fields.get(ft)+"\"\n"+
-        "          }");
+        "          {\"fieldType\": \""+ft.toString().toLowerCase()+"\", \"value\": \""+_fields.get(ft)+"\"}");
       if (i < _fields.size() - 1) sb.append(",\n");
       else sb.append("\n");
     }
@@ -121,13 +129,24 @@ public class Entry {
   }
 
 
+  /** Get the type of this entry.
+   * @return The entry type as lowercase string. */
+  public String getEntryType() {
+    return _entryType.toString().toLowerCase();
+  }
+
+
   /** Get all fields of this entry.
-   * @return Listing with fields and field types. */
-  public Map<String, String> getFields() {
-    var lcMap = new HashMap<String, String>();
+   * @return JSON array with fields, comprising of field types and their values. */
+  public ArrayNode getFields() {
+    var mapper = new ObjectMapper();
+    var arrayNode = mapper.createArrayNode();
     for (var ft : _keyOrder) {
-      lcMap.put(ft.toString().toLowerCase(), _fields.get(ft));
+      var node = mapper.createObjectNode();
+      node.put("fieldType", ft.toString().toLowerCase());
+      node.put("value", _fields.get(ft));
+      arrayNode.add(node);
     }
-    return lcMap;
+    return arrayNode;
   }
 }

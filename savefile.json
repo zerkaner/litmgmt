@@ -1,13 +1,13 @@
 {
-  "writtenOn": "2020-03-11 15:59:43",
-  "idCounters": [2, 7, 7],
+  "writtenOn": "2020-03-12 16:51:41",
+  "idCounters": [2, 2, 4],
   "users": [
     {
       "id": 0,
       "name": "john",
       "email": "john.wayne@web.de",
       "pwhash": "B9526479D8E75EEC48092197447318D86D2194EC",
-      "collections": [6]
+      "collections": [0, 1]
     },
     {
       "id": 1,
@@ -19,9 +19,74 @@
   ],
   "collections": [
     {
-      "id": 6,
-      "name": "col02 newName",
+      "id": 0,
+      "name": "Famous Papers",
       "entries": [
+      {
+        "id": 0,
+        "citeKey": "Stevens_Long_2011",
+        "entryType": "article",
+        "fields": [
+          {"fieldType": "author", "value": "Judith Stevens-Long and Steven A. Schapiro and Charles McClintock"},
+          {"fieldType": "title", "value": "Passionate Scholars"},
+          {"fieldType": "journal", "value": "Adult Education Quarterly"},
+          {"fieldType": "year", "value": "2011"},
+          {"fieldType": "month", "value": "March"},
+          {"fieldType": "volume", "value": "62"},
+          {"fieldType": "pages", "value": "180-198"},
+          {"fieldType": "note", "value": "doi:10.1177/0741713611402046"}
+        ]
+      },
+      {
+        "id": 1,
+        "citeKey": "Kishore_2018",
+        "entryType": "article",
+        "fields": [
+          {"fieldType": "author", "value": "Nishant Kishore andand Ayesha Mahmud and Mathew V. Kiang and Irmary Rodriguez and Arlan Fuller"},
+          {"fieldType": "title", "value": "Mortality in Puerto Rico after Hurricane Maria"},
+          {"fieldType": "journal", "value": "New England Journal of Medicine"},
+          {"fieldType": "year", "value": "2018"},
+          {"fieldType": "volume", "value": "379"},
+          {"fieldType": "pages", "value": "162-170"},
+          {"fieldType": "note", "value": "doi:10.1056/nejmsa1803972"}
+        ]
+      },
+      {
+        "id": 3,
+        "citeKey": "Steffen_2018",
+        "entryType": "article",
+        "fields": [
+          {"fieldType": "author", "value": "Will Steffen and Johan Rockström and Katherine Richardson and Diana Liverman"},
+          {"fieldType": "title", "value": "Trajectories of the Earth System in the Anthropocene"},
+          {"fieldType": "journal", "value": "Proceedings of the National Academy of Sciences"},
+          {"fieldType": "year", "value": "2018"},
+          {"fieldType": "month", "value": "August"},
+          {"fieldType": "volume", "value": "115"},
+          {"fieldType": "pages", "value": "8252-8259"},
+          {"fieldType": "note", "value": "doi:10.1073/pnas.1810141115"}
+        ]
+      }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Computer Science",
+      "entries": [
+      {
+        "id": 2,
+        "citeKey": "Silver_2017",
+        "entryType": "article",
+        "fields": [
+          {"fieldType": "author", "value": "David Silver and Julian Schrittwieser and Karen Simonyan and Ioannis Antonoglou and Aja Huang"},
+          {"fieldType": "title", "value": "Mastering the game of Go without human knowledge"},
+          {"fieldType": "journal", "value": "Nature"},
+          {"fieldType": "year", "value": "2017"},
+          {"fieldType": "month", "value": "October"},
+          {"fieldType": "volume", "value": "550"},
+          {"fieldType": "pages", "value": "354-3599"},
+          {"fieldType": "note", "value": "10.1038/nature24270"}
+        ]
+      }
       ]
     }
   ]
