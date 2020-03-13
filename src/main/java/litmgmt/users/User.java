@@ -11,12 +11,12 @@ import litmgmt.persistency.IdHelper;
  * access to a list of collections which in turn keep the citations. */
 public class User {
 
-  private int _id;                       // User identifier.
-  private String _name;                  // User name.
-  private String _email;                 // E-mail of the user.
-  private String _passwordHash;          // MD5 password hash.
+  private int _id;                    // User identifier.
+  private String _name;               // User name.
+  private String _email;              // E-mail of the user.
+  private String _passwordHash;       // SHA-1 password hash.
   private List<Integer> _collections; // List of collections this user has.
-  private MessageDigest _md5;
+  private MessageDigest _md5;         // Hashing instance.
 
 
   /** Create a new user.
@@ -70,6 +70,13 @@ public class User {
    * @param colId Identifier of the collection to add. */
   public void addCollection(int colId) {
     _collections.add(colId);
+  }
+
+
+  /** Remove a collection from this user's repository.
+   * @param colId Identifier of the collection to remove. */
+  public void removeCollection(int colId) {
+    _collections.remove(Integer.valueOf(colId));
   }
 
 

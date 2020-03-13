@@ -1,8 +1,7 @@
 package litmgmt;
 
 import java.nio.file.Paths;
-
-import litmgmt.citation.CollectionManager;
+import litmgmt.citation.collections.CollectionManager;
 import litmgmt.persistency.SaveFileReader;
 import litmgmt.rest.JavalinServer;
 import litmgmt.users.UserAuthenticator;
@@ -14,7 +13,7 @@ public class App {
   public static void main(final String[] args) {
 
     var userAuth = new UserAuthenticator();
-    var colMgr = new CollectionManager(userAuth);
+    var colMgr = new CollectionManager();
     var server = new JavalinServer(userAuth, colMgr, 7000);
 
     // Restore the previous program state and add hook for save on ordered shutdown.
@@ -32,6 +31,3 @@ public class App {
     server.start();
   }
 }
-
-// https://www.baeldung.com/javalin-rest-microservices
-// curl -H "Accept: application/json" -H "Authorization: Bearer my_token" https://reqbin.com/echo/get/json

@@ -1,0 +1,447 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: litmgmt
+  description: Latex literature management for SE2
+servers:
+  - url: http://foo.bar/api/
+paths:
+
+  /collections:
+    get:
+      description: Latex literature management
+      operationId: findCollections
+      responses:
+        '200':
+          description: collections respose
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collection'
+      security:
+        - bearerAuth: []
+
+    post:
+      description: Creates a new collection
+      operationId: addCollection
+      requestBody:
+        description: Collection to add to the library
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Collection'
+      responses:
+        '200':
+          description: collection response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+        '401':
+          description: unauthorized
+        '409':
+          description: conflict
+      security:
+        - bearerAuth: []
+
+  /collections/{id}:
+    get:
+      description: returns a single collection
+      operationId: findCollection
+      parameters:
+        - name: id
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+        '401':
+          description: unauthorized
+        '404':
+          description: not found
+      security:
+        - bearerAuth: []
+
+    delete:
+      description: deletes a collection by id
+      operationId: deleteCollection
+      parameters:
+        - name: id
+          in: path
+          description: ID of collection to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: collection deleted
+        '401':
+          description: unauthorized
+        '404':
+          description: not found
+      security:
+        - bearerAuth: []
+
+    put:
+      description: edits a collection by id
+      operationId: editCollection
+      parameters:
+        - name: id
+          in: path
+          description: ID of collection to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: collection to edit
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Collection'
+      responses:
+        '204':
+          description: collection deleted
+        '401':
+          description: unauthorized
+        '404':
+          description: not found
+      security:
+        - bearerAuth: []
+
+  /collections/{collectionId}/entries:
+    post:
+      description: Creates a new entry
+      operationId: addEntry
+      parameters:
+        - name: collectionId
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: collection response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+        '401':
+          description: unauthorized
+        '409':
+          description: conflict
+      security:
+        - bearerAuth: []
+
+  /collections/{collectionId}/entries/{entryId}:
+    get:
+      description: returns a single entry
+      operationId: findEntry
+      parameters:
+        - name: collectionId
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: entryId
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entry'
+        '401':
+          description: unauthorized
+        '404':
+          description: not found
+      security:
+        - bearerAuth: []
+
+    delete:
+      description: deletes a collection by id
+      operationId: deleteEntry
+      parameters:
+        - name: collectionId
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: entryId
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: collection deleted
+        '401':
+          description: unauthorized
+        '404':
+          description: not found
+      security:
+        - bearerAuth: []
+
+    put:
+      description: edits an entry by id
+      operationId: editEntry
+      parameters:
+        - name: collectionId
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: entryId
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: entry to edit
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Collection'
+      responses:
+        '204':
+          description: collection deleted
+        '401':
+          description: unauthorized
+        '404':
+          description: not found
+      security:
+        - bearerAuth: []
+
+  /register:
+    post:
+      description: Creates a new user
+      operationId: addUser
+      responses:
+        '200':
+          description: user created
+        '409':
+          description: conflict
+
+  /login:
+    post:
+      description: Returns a new user session
+      operationId: loginUser
+      requestBody:
+        description: User Credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: string
+
+        '403':
+          description: forbidden
+
+  /entrydescriptions:
+    get:
+      description: Get description for all entry types
+      operationId: getEntryDescriptions
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntryDescription'
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    Collection:
+      type: object
+      required:
+        - id
+        - name
+        - entries
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entry'
+    Entry:
+      type: object
+      required:
+        - id
+        - citeKey
+        - entryType
+        - fields
+      properties:
+        id:
+          type: integer
+          format: int64
+        citeKey:
+          type: string
+        entryType:
+          $ref: '#/components/schemas/EntryType'
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+    Field:
+      type: object
+      required:
+        - fieldType
+        - value
+      properties:
+        fieldType:
+          $ref: '#/components/schemas/FieldType'
+        value:
+          type: string
+
+    FieldDescription:
+      type: object
+      required:
+        - fieldType
+        - formatting
+      properties:
+        fieldType:
+          $ref: '#/components/schemas/FieldType'
+        formatting:
+          type: string
+
+    EntryDescription:
+      type: object
+      required:
+        - entryType
+        - requiredFields
+        - optionalFields
+      properties:
+        entryType:
+          $ref: '#/components/schemas/EntryType'
+        requiredFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldDescription'
+        optionalFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldDescription'
+
+    EntryType:
+      type: string
+      enum:
+        - article
+        - book
+        - booklet
+        - inbook
+        - incollection
+        - inproceedings
+        - manual
+        - mastersthesis
+        - misc
+        - phdthesis
+        - proceedings
+        - techreport
+        - unpublished
+
+    FieldType:
+      type: string
+      enum:
+        - address
+        - annote
+        - author
+        - booktitle
+        - chapter
+        - crossref
+        - edition
+        - editor
+        - howpublished
+        - institution
+        - journal
+        - key
+        - month
+        - note
+        - number
+        - organization
+        - pages
+        - publisher
+        - school
+        - series
+        - title
+        - type
+        - volume
+        - year
+
+    User:
+      type: object
+      required:
+        - name
+        - password
+        - email
+        - collections
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        collections:
+          $ref: '#/components/schemas/Collection'
+
+    Credentials:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+        password:
+          type: string
