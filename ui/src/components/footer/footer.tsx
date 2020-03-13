@@ -3,9 +3,9 @@ import * as React from "react";
 function Footer() {
 
     return (
-        <footer class="footer">
-            <div class="container is-fluid">
-                <div class="content has-text-centered">
+        <footer className="footer">
+            <div className="container is-fluid">
+                <div className="content has-text-centered">
                     <p>
                         <strong>Litmgmt</strong> by
                             <a href="http://haw-hamburg.de">Jan Dalski</a> and <a href="http://haw-hamburg.de">Christian Bargmann</a>
