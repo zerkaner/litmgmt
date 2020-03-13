@@ -18,7 +18,7 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "debug": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "debug": "parcel public/index.html",
+    "build": "parcel build public/index.html"
   }
 }
