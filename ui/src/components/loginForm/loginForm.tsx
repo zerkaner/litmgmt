@@ -1,6 +1,13 @@
 import * as React from "react";
 
+type props = {
+    onLogin: (username: string, password: string) => void
+}
+
 function LoginForm() {
+
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
 
     return (
         <>
@@ -13,7 +20,7 @@ function LoginForm() {
                     <form>
                         <div className="field">
                             <div className="control">
-                                <input className="input" type="email" placeholder="Your Email" autoFocus={false}></input>
+                                <input className="input" type="email" placeholder="Your Email" autoFocus={false} onChange={(e) => (setUsername(e.target.value))}></input>
                             </div>
                         </div>
 
