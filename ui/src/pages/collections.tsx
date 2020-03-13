@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 import Menue from '../components/header/header';
 import Footer from '../components/footer/footer';
 import CollectionList from '../components/collections/collectionList';

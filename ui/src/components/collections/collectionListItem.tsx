@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from "react";
 
-function CollectionListItem(props) {
+function CollectionListItem(props: any) {
 
     return (
         <tr>
