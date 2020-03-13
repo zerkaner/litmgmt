@@ -1,7 +1,8 @@
 import * as React from "react";
 
 type Props {
-    title: String
+    title: String;
+    isAuthenticated: boolean;
 }
 
 function Menue(props: Props) {

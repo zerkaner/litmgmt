@@ -13,7 +13,7 @@ function LoginForm() {
                     <form>
                         <div className="field">
                             <div className="control">
-                                <input className="input" type="email" placeholder="Your Email" autofocus=""></input>
+                                <input className="input" type="email" placeholder="Your Email" autoFocus={false}></input>
                             </div>
                         </div>
 

@@ -2,10 +2,9 @@ import * as React from "react";
 import Menue from '../components/header/header';
 import Footer from '../components/footer/footer';
 import LoginForm from '../components/loginForm/loginForm';
-import { useAuth, useAuthDispatch, useAuthState } from "../contexts/authContext";
+import { useAuthDispatch, useAuthState } from "../contexts/authContext";
 
 function LoginPage() {
-
     return (
         <>
             <Menue title="Litmgmt - Bibtex Manager" />

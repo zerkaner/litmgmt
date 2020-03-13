@@ -7,11 +7,11 @@ interface PrivateRouteProps extends RouteProps {
   }
 
   export const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, ...rest}) => {
-      const context = useAuthState()
+      const global = useAuthState();
 
       return (
           <Route
-          render={props => (isAuthenticated === true ? <Component {...props} /> : <Redirect to="/login" />)}
+          render={props => (global.isAuthenticated === true ? <Component {...props} /> : <Redirect to="/login" />)}
           {...rest}
         />
       )

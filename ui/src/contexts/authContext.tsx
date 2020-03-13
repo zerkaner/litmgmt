@@ -23,14 +23,10 @@ function AuthReducer(state: State, action: Action): State {
             return { ...state, username: action.username}
         }
         case 'isAuthenticated': {
-            return {
-                username: state.username,
-                token: state.token,
-                isAuthenticated: action.value,
-            }
+            return {...state, isAuthenticated: action.value}
         }
         default: {
-            throw new Error(`Unhandled action type: ${action.type}`)
+            throw new Error(`Unhandled action type`)
         }
     }
 }
@@ -63,7 +59,3 @@ function useAuthDispatch() {
 }
 
 export {useAuthState, useAuthDispatch, AuthProvider}
-
-export function useAuth() {
-    return [useAuthState(), useAuthDispatch()]
-}

@@ -3,13 +3,14 @@ import { Route, Switch } from 'react-router-dom';
 
 import LoginPage from "./pages/login";
 import CollectionsPage from "./pages/collections";
+import { PrivateRoute } from "./router/PrivateRoute";
 
 function App() {
 
     return (
         <Switch>
-            <Route exact path="/" component={CollectionsPage} />
-            <Route path="/collections/:id" component={CollectionsPage} />
+            <PrivateRoute exact path="/" component={CollectionsPage} />
+            <PrivateRoute path="/collections/:id" component={CollectionsPage} />
             <Route path="/login" component={LoginPage} />
         </Switch>
     );
