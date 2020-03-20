@@ -14,7 +14,7 @@ public class App {
 
     var userAuth = new UserAuthenticator();
     var colMgr = new CollectionManager();
-    var server = new JavalinServer(userAuth, colMgr, 7000);
+    var server = new JavalinServer(userAuth, colMgr, 80, "html");
 
     // Restore the previous program state and add hook for save on ordered shutdown.
     var saveFile = Paths.get(System.getProperty("user.dir"), "savefile.json").toString();

@@ -1,11 +1,13 @@
 package litmgmt.rest;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.staticfiles.Location;
 import litmgmt.citation.collections.Collection;
 import litmgmt.citation.collections.CollectionManager;
 import litmgmt.citation.collections.Entry;
@@ -30,8 +32,9 @@ public class JavalinServer {
   /** Create a new web server.
    * @param userAuth User authenticator for login and register endpoints.
    * @param colMgr Collection manager for CRUD operations on collections and entries.
-   * @param port Web server port. */
-  public JavalinServer(UserAuthenticator userAuth, CollectionManager colMgr, int port) {
+   * @param port Web server port.
+   * @param htmlDir HTML directory for static content delivery. May be set to 'null' to disable it! */
+  public JavalinServer(UserAuthenticator userAuth, CollectionManager colMgr, int port, String htmlDir) {
     _userAuth = userAuth;
     _colMgr = colMgr;
     _port = port;
@@ -39,6 +42,10 @@ public class JavalinServer {
       config -> {
         config.enableWebjars();
         config.enableCorsForAllOrigins();
+        if (htmlDir != null) {
+          var staticPath = Paths.get(System.getProperty("user.dir"), htmlDir).toString();
+          config.addStaticFiles(staticPath, Location.EXTERNAL);
+        }
         config.defaultContentType = "application/json";
       }
     );
@@ -63,7 +70,7 @@ public class JavalinServer {
 
     // Register a new user.
     // | curl -X POST -H "Content-Type: application/json" -d '{"name":"john",
-    // |   "password":"wayne", "email":"john.wayne@web.de"}' http://localhost:7000/api/register
+    // |   "password":"wayne", "email":"john.wayne@web.de"}' http://localhost/api/register
     _server.post("/api/register", ctx -> {
       try {
         var jsonNode = new ObjectMapper().readTree(ctx.body());
@@ -92,7 +99,7 @@ public class JavalinServer {
 
     // Login an existing user.
     // | curl -X POST -H "Content-Type: application/json" -d '{"name":"john",
-    // |   "password":"wayne"}' http://localhost:7000/api/login
+    // |   "password":"wayne"}' http://localhost/api/login
     _server.post("/api/login", ctx -> {
       try {
         var jsonNode = new ObjectMapper().readTree(ctx.body());
@@ -115,7 +122,7 @@ public class JavalinServer {
 
 
     // Fetch a list with static entry type descriptions.
-    // | curl http://localhost:7000/api/entrydescriptions
+    // | curl http://localhost/api/entrydescriptions
     _server.get("/api/entrydescriptions", ctx -> {
       ctx.json(DescriptionList.getEntryDescriptions());
     });
@@ -123,7 +130,7 @@ public class JavalinServer {
 
     // Fetch all collections for a user.
     // | curl -H "Accept: application/json" -H "Authorization: Bearer <token>"
-    // |   http://localhost:7000/api/collections
+    // |   http://localhost/api/collections
     _server.get("/api/collections", ctx -> {
       var user = checkLogin(ctx);
       if (user != null) ctx.json(_colMgr.getAllCollections(user));
@@ -132,7 +139,7 @@ public class JavalinServer {
 
     // Create a new collection.
     // | curl -X POST -H "Accept: application/json" -H "Authorization: Bearer <token>"
-    // |   -d '{"name":"col01"}' http://localhost:7000/api/collections
+    // |   -d '{"name":"col01"}' http://localhost/api/collections
     _server.post("/api/collections", ctx -> {
       var user = checkLogin(ctx);
       if (user != null) {
@@ -160,7 +167,7 @@ public class JavalinServer {
 
     // Fetch a single collection for a user.
     // | curl -H "Accept: application/json" -H "Authorization: Bearer <token>"
-    // |   http://localhost:7000/api/collections/0
+    // |   http://localhost/api/collections/0
     _server.get("/api/collections/:col-id", ctx -> {
       var user = checkLogin(ctx);
       var collection = fetchCollectionFromQuery(ctx, user, "Get collection");
@@ -170,7 +177,7 @@ public class JavalinServer {
 
     // Delete a collection.
     // | curl -X DELETE -H "Accept: application/json" -H "Authorization: Bearer <token>"
-    // |   http://localhost:7000/api/collections/0
+    // |   http://localhost/api/collections/0
     _server.delete("/api/collections/:col-id", ctx -> {
       var user = checkLogin(ctx);
       var collection = fetchCollectionFromQuery(ctx, user, "Delete collection");
@@ -183,7 +190,7 @@ public class JavalinServer {
 
     // Rename a collection.
     // | curl -X PUT -H "Accept: application/json" -H "Authorization: Bearer <token>"
-    // |   -d '{"name":"New collection name"}' http://localhost:7000/api/collections/0
+    // |   -d '{"name":"New collection name"}' http://localhost/api/collections/0
     _server.put("/api/collections/:col-id", ctx -> {
       var user = checkLogin(ctx);
       var collection = fetchCollectionFromQuery(ctx, user, "Rename collection");
@@ -209,7 +216,7 @@ public class JavalinServer {
 
     // Get all entries of a collection.
     // | curl -H "Accept: application/json" -H "Authorization: Bearer <token>"
-    // |   http://localhost:7000/api/collections/0/entries
+    // |   http://localhost/api/collections/0/entries
     _server.get("/api/collections/:col-id/entries", ctx -> {
       var user = checkLogin(ctx);
       var collection = fetchCollectionFromQuery(ctx, user, "Get all entries");
@@ -221,7 +228,7 @@ public class JavalinServer {
     // | curl -X POST -H "Accept: application/json" -H "Authorization: Bearer <token>"
     // |   -d '{"citeKey":"myCiteRef2018", "entryType":"article", "fields":[
     // |     {"fieldType": "author", "value":"Jim Raynor"}, {"fieldType":"address", "value":"Tarsonis"}]}'
-    // |   http://localhost:7000/api/collections/0/entries
+    // |   http://localhost/api/collections/0/entries
     _server.post("/api/collections/:col-id/entries", ctx -> {
       var user = checkLogin(ctx);
       var collection = fetchCollectionFromQuery(ctx, user, "Create entry");
@@ -259,7 +266,7 @@ public class JavalinServer {
 
     // Get a single entry on a collection.
     // | curl -H "Accept: application/json" -H "Authorization: Bearer <token>"
-    // |   http://localhost:7000/api/collections/0/entries/2
+    // |   http://localhost/api/collections/0/entries/2
     _server.get("/api/collections/:col-id/entries/:entry-id", ctx -> {
       var user = checkLogin(ctx);
       var entry = fetchEntryFromQuery(ctx, user, "Get entry");
@@ -269,7 +276,7 @@ public class JavalinServer {
 
     // Delete an entry from a collection.
     // | curl -X DELETE -H "Accept: application/json" -H "Authorization: Bearer <token>"
-    // |   http://localhost:7000/api/collections/0/entries/2
+    // |   http://localhost/api/collections/0/entries/2
     _server.delete("/api/collections/:col-id/entries/:entry-id", ctx -> {
       var user = checkLogin(ctx);
       var collection = fetchCollectionFromQuery(ctx, user, "Delete entry");
@@ -285,7 +292,7 @@ public class JavalinServer {
     // | curl -X PUT -H "Accept: application/json" -H "Authorization: Bearer <token>"
     // |   -d '{"citeKey":"myCiteRef2018", "entryType":"article", "fields":[
     // |     {"fieldType": "author", "value":"Tychus Findlay"}, {"fieldType":"address", "value":"Tarsonis"}]}'
-    // |   http://localhost:7000/api/collections/0/entries/2
+    // |   http://localhost/api/collections/0/entries/2
     _server.put("/api/collections/:col-id/entries/:entry-id", ctx -> {
       var user = checkLogin(ctx);
       var collection = fetchCollectionFromQuery(ctx, user, "Update entry");
@@ -342,7 +349,7 @@ public class JavalinServer {
 
 
     // Testing endpoint to run debugging code.
-    // | curl http://localhost:7000/api/debug
+    // | curl http://localhost/api/debug
     _server.get("/api/debug", ctx -> {
       var entry = new Entry("citeKey", EntryType.ARTICLE);
       entry.setField(FieldType.ADDRESS, "some road");
